@@ -1,39 +1,54 @@
 from django.db import models
 
-from documents.models import Book, JournalArticles  #
-
 
 class User(models.Model):
     login = models.CharField(max_length=100)
     password = models.CharField(max_length=50)
-    id = models.IntegerField(max_length=100)
+    library_card_number = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=255)
+    second_name = models.CharField(max_length=255)
+    address = models.CharField(max_length=500)
+    phone_number = models.CharField(max_length=20)
 
     class Meta:
         managed = False
 
 
-class Patron(models.Model, User):
-    books = models.ManyToManyField(Book, related_name="user")  ## очень хочу матрицу
-    audio_video = models.ManyToManyField(JournalArticles, related_name="audio_video")
-    journal_articles = models.ManyToManyField(Book, related_name="journal_articles")
+class Patron(User):
+    def search_doc(self):
+        pass
+
+    def check_out_doc(self):
+        pass
+
+    def return_doc(self):
+        pass
 
     def is_overdue(self):  # bool
         pass
 
+
+class Student(Patron):
     pass
 
 
-class Student(models.Model, Patron):
+class Teacher(Patron):
     pass
 
 
-class Teacher(models.Model, Patron):
-    pass
-
-
-class Librarian(models.Model, User):
-
-    def add(self):
+class Librarian(User):
+    def manage_patron(self):
         pass
 
-    pass
+    def check_overdue_doc(self):
+        pass
+
+    def add_doc(self):
+        pass
+
+    def delete_doc(self):
+        pass
+
+    def modify_doc(self):
+        pass
+

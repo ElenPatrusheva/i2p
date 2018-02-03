@@ -1,8 +1,11 @@
 from django.db import models
 
+from user.models import Patron
+
 
 class Author(models.Model):
-    name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255)
+    second_name = models.CharField(max_length=255)
 
 
 class Keyword(models.Model):
@@ -20,19 +23,20 @@ class Document(models.Model):
 
 
 class Copy(models.Model):
-    document = models.ForeignKey(Document)
+    document = models.ForeignKey(Document, on_delete=models.DO_NOTHING)
     hash_number = models.IntegerField(max_length=100)
+    owner = models.ForeignKey(Patron, on_delete=models.DO_NOTHING)
+    is_checked_out = models.BooleanField(max_length=10)
+
+
+class JournalArticles(Document):
     pass
 
 
-class JournalArticles(models.Model, Document):
-    pass
-
-
-class Book(models.Model, Document):
+class Book(Document):
     edition = models.IntegerField(max_length=100)
     pass
 
 
-class AudioVideo(models.Model, Document):
+class AudioVideo(Document):
     pass
