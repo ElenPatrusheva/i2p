@@ -1,5 +1,7 @@
 from django.db import models
 
+from library.models import Library
+
 
 class User(models.Model):
     login = models.CharField(max_length=100)
@@ -9,6 +11,7 @@ class User(models.Model):
     second_name = models.CharField(max_length=255)
     address = models.CharField(max_length=500)
     phone_number = models.CharField(max_length=20)
+    library = models.ForeignKey(Library, on_delete=models.DO_NOTHING, related_name='users')
 
     class Meta:
         managed = False
@@ -32,7 +35,7 @@ class Student(Patron):
     pass
 
 
-class Teacher(Patron):
+class Faculty(Patron):
     pass
 
 
@@ -51,4 +54,3 @@ class Librarian(User):
 
     def modify_doc(self):
         pass
-

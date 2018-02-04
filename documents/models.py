@@ -1,5 +1,6 @@
 from django.db import models
 
+from library.models import UserCard
 from user.models import Patron
 
 
@@ -23,9 +24,9 @@ class Document(models.Model):
 
 
 class Copy(models.Model):
-    document = models.ForeignKey(Document, on_delete=models.DO_NOTHING)
+    document = models.ForeignKey(Document, on_delete=models.DO_NOTHING, related_name='copies')
+    user_card = models.ForeignKey(UserCard, on_delete=models.DO_NOTHING, related_name='user_card')
     hash_number = models.IntegerField(max_length=100)
-    owner = models.ForeignKey(Patron, on_delete=models.DO_NOTHING)
     is_checked_out = models.BooleanField(max_length=10)
 
 
@@ -34,6 +35,7 @@ class JournalArticles(Document):
 
 
 class Book(Document):
+    is_best_seller = models.BooleanField(max_length=10)
     edition = models.IntegerField(max_length=100)
     pass
 
