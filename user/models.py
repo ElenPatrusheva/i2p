@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 
 
@@ -9,16 +11,20 @@ class User(models.Model):
     address = models.CharField(max_length=500)
     phone_number = models.CharField(max_length=20)
 
-    class Meta:
-        managed = False
-
 
 class Patron(User):
     def search_doc(self):
         pass
 
-    def check_out_doc(self):
-        pass
+    def check_out_doc(self, document):
+        for copy in document.copies.all():
+            if not copy.is_checked_out:
+                copy.is_checked_out = True
+                self.user_card.copies.add(copy)
+                copy.booking_date = datetime.date.today()
+                copy.save()
+                return True
+        return False
 
     def return_doc(self):
         pass
@@ -39,7 +45,7 @@ class Librarian(User):
     def manage_patron(self):
         pass
 
-    def check_overdue_doc(self):
+    def check_overdue_copy(self):
         pass
 
     def add_doc(self):
