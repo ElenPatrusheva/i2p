@@ -1,7 +1,7 @@
 from django.db import models
 
-from library.models import UserCard
-from user.models import Patron
+from library.models import UserCard, Library
+from user.models import Author, Patron
 
 
 class Keyword(models.Model):
@@ -13,19 +13,16 @@ class Editor(models.Model):
     second_name = models.CharField(max_length=250)
 
 
-class Author(models.Model):
-    first_name = models.CharField(max_length=250)
-    second_name = models.CharField(max_length=250)
-
-
 class Journal(models.Model):
     title = models.CharField(max_length=250)
 
 
 class Document(models.Model):
+    library = models.ForeignKey(Library, on_delete=models.DO_NOTHING, related_name='documents')
     title = models.CharField(max_length=250)
     authors = models.ManyToManyField(Author, related_name='documents')
     price_value = models.IntegerField()
+    image = models.ImageField(blank=True)
     keywords = models.ManyToManyField(Keyword, related_name='documents')  # i do not know
 
 
