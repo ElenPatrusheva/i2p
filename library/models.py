@@ -3,10 +3,6 @@ from django.db import models
 from user.models import User
 
 
-class UserCard(models.Model):
-    user = models.OneToOneField(User, on_delete=models.DO_NOTHING, related_name='user_card')
-
-
 class Library(models.Model):
     def calculate_items(self):
         pass
@@ -16,3 +12,9 @@ class Library(models.Model):
 
     def overdue_fines(self):
         pass
+
+
+class UserCard(models.Model):
+    user = models.OneToOneField(User, on_delete=models.DO_NOTHING, related_name='user_card')
+    library_card_number = models.CharField(max_length=100)
+    library = models.ForeignKey(Library, on_delete=models.DO_NOTHING, related_name='user_cards')
