@@ -47,12 +47,20 @@ class Patron(User):
                 copy.is_checked_out = True
                 self.user_card.copies.add(copy)
                 copy.booking_date = datetime.date.today()
+                self.user_card.save()
                 copy.save()
                 return True
         return False
 
     def return_doc(self, document):
-
+        for copy in self.user_card.copies.all():
+            if copy.document == document:
+                copy.is_checked_out = False
+                self.user_card.copies.exclude(copy)
+                self.user_card.save()
+                copy.save()
+                return True
+        return False
         pass
 
     def has_overdue(self):  # bool
