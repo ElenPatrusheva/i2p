@@ -14,6 +14,13 @@ class Library(models.Model):
         pass
 
 
+''' 
+every user has exactly one user card
+user card contains all copies, which user checked out
+user card has unique number
+'''
+
+
 class UserCard(models.Model):
     user = models.OneToOneField(User, on_delete=models.DO_NOTHING, related_name='user_card')
     library_card_number = models.CharField(max_length=100)

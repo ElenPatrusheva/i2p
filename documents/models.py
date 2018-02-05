@@ -1,3 +1,4 @@
+# all the classes there (but not copy) is about documents, not about library system. Copy connects library and documents
 from django.db import models
 
 from library.models import UserCard, Library
@@ -6,6 +7,16 @@ from user.models import Author, Patron
 
 class Keyword(models.Model):
     word = models.CharField(max_length=255)
+
+
+# there are 3 types of documents: books, journal articles and audio/video files
+class Document(models.Model):
+    library = models.ForeignKey(Library, on_delete=models.DO_NOTHING, related_name='documents')
+    title = models.CharField(max_length=250)
+    authors = models.ManyToManyField(Author, related_name='documents')
+    price_value = models.IntegerField()
+    image = models.ImageField(blank=True)
+    keywords = models.ManyToManyField(Keyword, related_name='documents')  # i do not know
 
 
 class Editor(models.Model):
@@ -17,27 +28,10 @@ class Journal(models.Model):
     title = models.CharField(max_length=250)
 
 
-class Document(models.Model):
-    library = models.ForeignKey(Library, on_delete=models.DO_NOTHING, related_name='documents')
-    title = models.CharField(max_length=250)
-    authors = models.ManyToManyField(Author, related_name='documents')
-    price_value = models.IntegerField()
-    image = models.ImageField(blank=True)
-    keywords = models.ManyToManyField(Keyword, related_name='documents')  # i do not know
-
-
 class Issue(models.Model):
     publication_date = models.DateField()
     editors = models.ManyToManyField(Editor, related_name='issues')
     journal = models.ForeignKey(Journal, on_delete=models.DO_NOTHING, related_name='issues')
-
-
-class Copy(models.Model):
-    document = models.ForeignKey(Document, on_delete=models.DO_NOTHING, related_name='copies')
-    user_card = models.ForeignKey(UserCard, on_delete=models.DO_NOTHING, related_name='copies')
-    number = models.IntegerField()
-    is_checked_out = models.BooleanField()
-    booking_date = models.DateField()
 
 
 class JournalArticles(Document):
@@ -53,3 +47,11 @@ class Book(Document):
 
 class AudioVideo(Document):
     pass
+
+
+class Copy(models.Model):
+    document = models.ForeignKey(Document, on_delete=models.DO_NOTHING, related_name='copies')
+    user_card = models.ForeignKey(UserCard, on_delete=models.DO_NOTHING, related_name='copies')
+    number = models.IntegerField()
+    is_checked_out = models.BooleanField()
+    booking_date = models.DateField()
